@@ -18,7 +18,9 @@ def input(clf = None):
 		tf = request.form['txtTF']
 		ef = request.form['txtEF']
 		
-		est = predict(uaw,uucw,tf,ef)
+		est = prediction(uaw,uucw,tf,ef)
+		
+		clf.predict(est)
 		
 	else:
 		print 'Error Model'
@@ -39,7 +41,7 @@ if __name__ == "__main__":
 	
 	app.run()
 	
-def predict(uaw,uucw,tf,ef):
+def prediction(uaw,uucw,tf,ef):
 	
 	uucp = uaw + uucw
 	ucp = uucp * tf * ef

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+
+    <title>UCP Effort Estimator</title>
+
+    {{ js_resources|indent(4)|safe }}
+
+    {{ css_resources|indent(4)|safe }}
+
+  </head>
+  <body>
+    <!-- A simple form for changing the graph -->
+    <p> Enter the usecase data: </p>
+    <form name="usecase_data" method='GET'>
+        <br>
+        UAW:
+        <input type="text" name="uaw" value="{{ uaw }}">
+        <br>
+        UUCW:
+        <input type="text" name="uucw" value="{{ uucw }}">
+        <br>
+        TF:
+        <input type="text" name="tf" value="{{ tf }}">
+        <br>
+        EF:
+        <input type="text" name="ef" value="{{ ef }}">
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    
+    <p> {{ estimation }} </p>
+  </body>
+</html>

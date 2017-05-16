@@ -7,7 +7,7 @@ clf = None;
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+	return render_template('index.html')
 	
 @app.route('/input', methods=['GET', 'POST'])
 def input(clf = None):

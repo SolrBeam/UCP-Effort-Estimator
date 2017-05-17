@@ -1,13 +1,17 @@
 from __future__ import print_function
 
 import flask
+import numpy as np
 
+from sklearn.externals import joblib
 from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
 
 app = flask.Flask(__name__)
+
+model = joblib.load('model.pkl')
 
 def getitem(obj, item, default):
 	if item not in obj:
@@ -32,6 +36,7 @@ def user_request():
 	ef = int(getitem(args, 'ef', 0))
 
 	estimation = prediction(uaw, uucw, tf, ef)
+	real = model.predict(np.array([[estimation]]))
 
 	js_resources = INLINE.render_js()
 	css_resources = INLINE.render_css()
@@ -44,7 +49,8 @@ def user_request():
 		uucw=uucw,
 		tf=tf,
 		ef=ef,
-		estimation=estimation
+		estimation=estimation,
+		real=int(round(real[0]))
 	)
 	return encode_utf8(html)
 

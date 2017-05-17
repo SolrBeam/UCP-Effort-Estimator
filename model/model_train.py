@@ -61,4 +61,8 @@ y_reg = lin_reg.fit(X, y).predict(X)
 # plt.legend()
 # plt.show()
 
-model = joblib.dump(y_lin, 'model.pkl')
+prd = np.array([[10]])
+y_predict = lin_reg.predict(prd)
+print(y_predict)
+
+joblib.dump(lin_reg, 'model.pkl')

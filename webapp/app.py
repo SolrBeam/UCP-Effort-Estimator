@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import os
 import flask
 import numpy as np
 
@@ -12,9 +13,11 @@ from bokeh.util.string import encode_utf8
 
 app = flask.Flask(__name__)
 
-model = joblib.load('model.pkl')
-df = joblib.load('scatter.pkl')
-y_reg = joblib.load('prediction.pkl')
+req_path = os.path.dirname(__file__)
+
+model = joblib.load(os.path.relpath('..\\model\\model.pkl', req_path))
+df = joblib.load(os.path.relpath('..\\model\\scatter.pkl', req_path))
+y_reg = joblib.load(os.path.relpath('..\\model\\prediction.pkl', req_path))
 
 def getitem(obj, item, default):
 	if item not in obj:

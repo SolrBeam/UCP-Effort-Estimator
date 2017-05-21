@@ -4,6 +4,8 @@ from sklearn.svm import SVR
 from sklearn import linear_model
 import matplotlib.pyplot as plt
 from sklearn.externals import joblib
+from bokeh.plotting import figure
+from bokeh.charts import Scatter, output_file, show
 
 convert_dot = lambda x: x.replace(',','.')
 
@@ -49,6 +51,12 @@ y_reg = lin_reg.fit(X, y).predict(X)
 # y_rbf = svr_rbf.fit(X, y).predict(X)
 # y_poly = svr_poly.fit(X, y).predict(X)
 
+p = Scatter(df, x='Effort_Estimation', y='Real_Effort_Person_Hours', 
+			title='Scatter Plot', xlabel='Effort_Estimation', ylabel='Real_Effort_Person_Hours')
+p.line(df['Effort_Estimation'], y_reg, line_width=2)
+# output_file('scatter.html')
+# show(p)
+
 # lw = 4
 # plt.scatter(X, y, color='darkorange', label='data')
 # plt.plot(X, y_lin, color='c', lw=lw, label='Linear model')
@@ -66,3 +74,5 @@ y_predict = lin_reg.predict(prd)
 print(y_predict)
 
 joblib.dump(lin_reg, 'model.pkl')
+joblib.dump(df, 'scatter.pkl')
+joblib.dump(y_reg, 'prediction.pkl')

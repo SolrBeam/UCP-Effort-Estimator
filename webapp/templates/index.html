@@ -10,6 +10,8 @@
 
     {{ css_resources|indent(4)|safe }}
 
+    {{ plot_script|indent(4)|safe }}
+
   </head>
   <body>
     <!-- A simple form for changing the graph -->
@@ -31,7 +33,9 @@
         <button type="submit">Submit</button>
     </form>
     
-    <p> {{ estimation }} </p>
-    <p> {{ real }} </p>
+    <p>UCP Estimation: {{ estimation }} </p>
+    <p>Predicted Real Effort: {{ real }} </p>
+
+    {{ plot_div|indent(4)|safe }}
   </body>
 </html>

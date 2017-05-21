@@ -6,12 +6,15 @@ import numpy as np
 from sklearn.externals import joblib
 from bokeh.embed import components
 from bokeh.plotting import figure
+from bokeh.charts import Scatter
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
 
 app = flask.Flask(__name__)
 
 model = joblib.load('model.pkl')
+df = joblib.load('scatter.pkl')
+y_reg = joblib.load('prediction.pkl')
 
 def getitem(obj, item, default):
 	if item not in obj:
@@ -38,11 +41,18 @@ def user_request():
 	estimation = prediction(uaw, uucw, tf, ef)
 	real = model.predict(np.array([[estimation]]))
 
+	p = Scatter(df, x='Effort_Estimation', y='Real_Effort_Person_Hours', 
+			title='Scatter Plot', xlabel='Effort_Estimation', ylabel='Real_Effort_Person_Hours')
+	p.line(df['Effort_Estimation'], y_reg, line_width=2)
+
 	js_resources = INLINE.render_js()
 	css_resources = INLINE.render_css()
 
+	script, div = components(p)
 	html = flask.render_template(
 		'index.html',
+		plot_script=script,
+		plot_div=div,
 		js_resources=js_resources,
 		css_resources=css_resources,
 		uaw=uaw,

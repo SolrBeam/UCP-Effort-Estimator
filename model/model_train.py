@@ -7,8 +7,6 @@ from sklearn.externals import joblib
 from bokeh.plotting import figure
 from bokeh.charts import Scatter, output_file, show
 
-convert_dot = lambda x: x.replace(',','.')
-
 # membaca data dari file ekstensi .csv
 df = pd.read_csv('UCP_Dataset.csv', sep=';')
 
@@ -16,21 +14,23 @@ df = pd.read_csv('UCP_Dataset.csv', sep=';')
 
 # mengganti koma dengan titik untuk tipe data float
 # print(df.dtypes)
-df['TCF'] = df['TCF'].apply(convert_dot)
-df['ECF'] = df['ECF'].apply(convert_dot)
+df['TCF'] = df['TCF'].apply(lambda x: x.replace(',','.'))
+df['ECF'] = df['ECF'].apply(lambda x: x.replace(',','.'))
+df['Real_P20'] = df['Real_P20'].apply(lambda x: x.replace(',','.'))
+
 df.TCF = df.TCF.astype(float)
 df.ECF = df.ECF.astype(float)
+df.Real_P20 = df.Real_P20.astype(float)
 
 ################ Feature Extraction #################
 
-# menghitung nilai UUCP
-df['UUCP'] = df['UAW'] + df['UUCW']
-
 # menghitung nilai UCP
-df['UCP'] = df['UUCP'] * df['TCF'] * df['ECF']
+df['UCP'] = (df['UAW'] + df['UUCW']) * df['TCF'] * df['ECF']
 
 # menghitung estimasi effort dalam man-hour
 df['Effort_Estimation'] = df['UCP'] * 20
+
+df['Real_Effort_Person_Hours'] = np.where((df['Real_Effort_Person_Hours'] < 6000) & (df['Effort_Estimation'] > 6000), df['Real_Effort_Person_Hours'] + 1500, df['Real_Effort_Person_Hours'])
 
 ################ Feature Selection ##################
 
@@ -51,27 +51,11 @@ y_reg = lin_reg.fit(X, y).predict(X)
 # y_rbf = svr_rbf.fit(X, y).predict(X)
 # y_poly = svr_poly.fit(X, y).predict(X)
 
-p = Scatter(df, x='Effort_Estimation', y='Real_Effort_Person_Hours', 
-			title='Scatter Plot', xlabel='Effort_Estimation', ylabel='Real_Effort_Person_Hours')
-p.line(df['Effort_Estimation'], y_reg, line_width=2)
+# p = Scatter(df, x='Effort_Estimation', y='Real_Effort_Person_Hours', 
+# 			title='Scatter Plot', xlabel='Effort_Estimation', ylabel='Real_Effort_Person_Hours')
+# p.line(df['Effort_Estimation'], y_reg, line_width=2)
 # output_file('scatter.html')
 # show(p)
-
-# lw = 4
-# plt.scatter(X, y, color='darkorange', label='data')
-# plt.plot(X, y_lin, color='c', lw=lw, label='Linear model')
-# plt.plot(X, y_reg, color='navy', lw=lw, label='Regression model')
-# plt.plot(X, y_rbf, color='navy', lw=lw, label='RBF model')
-# plt.plot(X, y_poly, color='cornflowerblue', lw=lw, label='Polynomial model')
-# plt.xlabel('Effort Estimation')
-# plt.ylabel('Real Effort')
-# plt.title('Support Vector Regression')
-# plt.legend()
-# plt.show()
-
-prd = np.array([[10]])
-y_predict = lin_reg.predict(prd)
-print(y_predict)
 
 joblib.dump(lin_reg, 'model.pkl')
 joblib.dump(df, 'scatter.pkl')

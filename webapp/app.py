@@ -45,7 +45,7 @@ def user_request():
 	real = model.predict(np.array([[estimation]]))
 
 	p = Scatter(df, x='Effort_Estimation', y='Real_Effort_Person_Hours', 
-			title='Scatter Plot', xlabel='Effort_Estimation', ylabel='Real_Effort_Person_Hours')
+			title='Scatter Plot', xlabel='Real_P20', ylabel='Real_Effort_Person_Hours')
 	p.line(df['Effort_Estimation'], y_reg, line_width=2)
 
 	js_resources = INLINE.render_js()
